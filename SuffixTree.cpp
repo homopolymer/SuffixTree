@@ -9,7 +9,7 @@ SuffixTreeNode::SuffixTreeNode()
     seq_id      = vector<int>(1,0);
     key         = 0;
     parent      = 0;
-    range       = vector<int>(2,0);
+    range       = vector<Range>(1,Range(0,0));
     children    = map<char,SuffixTreeNode*>();
     path_label  = "";
     path_length = 0;
@@ -23,7 +23,7 @@ SuffixTreeNode::SuffixTreeNode(string& sequence)
     seq_id      = vector<int>(1,0);
     key         = 0;
     parent      = 0;
-    range       = vector<int>(2,0);
+    range       = vector<Range>(1,Range(0,0));
     children    = map<char,SuffixTreeNode*>();
     path_label  = "";
     path_length = 0;
@@ -39,7 +39,7 @@ SuffixTreeNode::SuffixTreeNode(vector<string>& sequences)
     seq_id      = vector<int>(1,0);
     key         = 0;
     parent      = 0;
-    range       = vector<int>(2,0);
+    range       = vector<Range>(1,Range(0,0));
     children    = map<char,SuffixTreeNode*>();
     path_label  = "";
     path_length = 0;
@@ -49,13 +49,13 @@ SuffixTreeNode::SuffixTreeNode(vector<string>& sequences)
     build(sequences);
 }
 
-SuffixTreeNode::SuffixTreeNode(int _seq_id,int _id,char _key,vector<int>& _range,string&_path_label,int _path_length)
+SuffixTreeNode::SuffixTreeNode(int _seq_id,int _id,char _key,Range& _range,string& _path_label,int _path_length)
 {
     id          = _id;
     seq_id      = vector<int>(1,_seq_id);
     key         = _key;
     parent      = 0;
-    range       = _range;
+    range       = vector<Range>(1,_range);
     children    = map<char,SuffixTreeNode*>();
     path_label  = _path_label;
     path_length = _path_length;
@@ -214,6 +214,7 @@ void SuffixTreeNode::build(int seq_id,string& sequence)
                 if (test->leaf!=0) // used for generalized suffix tree
                 {
                     test->leaf->seq_id.push_back(seq_id);
+                    test->leaf->range.push_back(Range(i-k,LL));
                     P = test->P->suffix_link;
                     K = test->K;
                 }else{
@@ -228,7 +229,7 @@ void SuffixTreeNode::build(int seq_id,string& sequence)
                     n += 1;
                     id += 1;
                     char i_key = sequence[i-k+Q->path_length];
-                    vector<int> i_range = {i-k,i-k+Q->path_length+test->d};
+                    Range i_range(i-k,i-k+Q->path_length+test->d);
                     string i_path_label = sequence.substr(i-k,Q->path_length+test->d);
                     int i_path_length = Q->path_length+test->d;
                     SuffixTreeNode* internal = new SuffixTreeNode(seq_id,id,i_key,i_range,i_path_label,i_path_length);
@@ -241,7 +242,7 @@ void SuffixTreeNode::build(int seq_id,string& sequence)
                     n += 1;
                     id += 1;
                     char key = sequence[i];
-                    vector<int> range = {i-k,LL};
+                    Range range(i-k,LL);
                     string path_label = sequence.substr(i-k,LL-i+k);
                     int path_length = LL-i+k;
                     SuffixTreeNode* leaf = new SuffixTreeNode(seq_id,id,key,range,path_label,path_length);
@@ -251,7 +252,7 @@ void SuffixTreeNode::build(int seq_id,string& sequence)
                     n += 1;
                     id += 1;
                     char key = sequence[i];
-                    vector<int> range = {i-k,LL};
+                    Range range(i-k,LL);
                     string path_label = sequence.substr(i-k,LL-i+k);
                     int path_length = LL-i+k;
                     SuffixTreeNode* leaf = new SuffixTreeNode(seq_id,id,key,range,path_label,path_length);

@@ -59,9 +59,13 @@
 //                               Add preorder iterator.
 //                               Add newick format output.
 //                               Add generalized suffix tree.
+// July 20, 2015    Feng Zeng    Add Range type.
 //
 //
 //
+
+#ifndef _SUFFIXTREE_HPP
+#define _SUFFIXTREE_HPP
 
 #include <vector>
 #include <map>
@@ -193,6 +197,7 @@ struct test_split_t{
 typedef test_split_t TestSplitResult;
 
 
+typedef tuple<int,int> Range;
 
 class SuffixTreeNode{
 
@@ -200,7 +205,7 @@ public:
     SuffixTreeNode();
     SuffixTreeNode(string& sequence);
     SuffixTreeNode(vector<string>& sequences);
-    SuffixTreeNode(int _seq_id,int _id,char _key,vector<int>& _range,string& _path_label,int _path_length);
+    SuffixTreeNode(int _seq_id,int _id,char _key,Range& _range,string& _path_label,int _path_length);
     ~SuffixTreeNode(){;}
 
 public:
@@ -231,7 +236,7 @@ public:
     vector<int>               seq_id;
     char                      key;
     map<char,SuffixTreeNode*> children;
-    vector<int>               range;
+    vector<Range>             range;
     string                    path_label;
     int                       path_length;
     SuffixTreeNode*           parent;
@@ -245,3 +250,4 @@ public:
 typedef SuffixTreeNode SuffixTree;
 typedef SuffixTreeNode GeneralizedSuffixTree;
 
+#endif
